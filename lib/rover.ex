@@ -35,34 +35,41 @@ defmodule Rover do
   end
 
   def handle_cast(:go_forward, state) do
-    new_state = case state.direction do
-      :N -> %Rover{ state | x: state.x, y: mod(state.y + 1, @world_height)}
-      :S -> %Rover{ state | x: state.x, y: mod(state.y - 1, @world_height)}
-      :E -> %Rover{ state | x: mod(state.x + 1, @world_width), y: state.y}
-      :W -> %Rover{ state | x: mod(state.x - 1, @world_width), y: state.y}
-    end
+    new_state =
+      case state.direction do
+        :N -> %Rover{state | x: state.x, y: rem(state.y + 1, @world_height)}
+        :S -> %Rover{state | x: state.x, y: rem(state.y - 1, @world_height)}
+        :E -> %Rover{state | x: rem(state.x + 1, @world_width), y: state.y}
+        :W -> %Rover{state | x: rem(state.x - 1, @world_width), y: state.y}
+      end
 
     {:no_reply, new_state}
   end
 
   def handle_cast(:go_backward, state) do
-    new_state = case state.direction do
-      :N -> %Rover{ state | x: state.x, y: mod(state.y - 1, @world_height)}
-      :S -> %Rover{ state | x: state.x, y: mod(state.y + 1, @world_height)}
-      :E -> %Rover{ state | x: mod(state.x + 1, @world_width), y: state.y}
-      :W -> %Rover{ state | x: mod(state.x - 1, @world_width), y: state.y}
-    end
+    new_state =
+      case state.direction do
+        :N -> %Rover{state | x: state.x, y: rem(state.y - 1, @world_height)}
+        :S -> %Rover{state | x: state.x, y: rem(state.y + 1, @world_height)}
+        :E -> %Rover{state | x: rem(state.x + 1, @world_width), y: state.y}
+        :W -> %Rover{state | x: rem(state.x - 1, @world_width), y: state.y}
+      end
 
     {:no_reply, new_state}
   end
 
   def handle_cast(:rotate_left, state) do
-    new_state = case state.direction do
-      :N -> %Rover{ state | direction: :N}
-      :S -> %Rover{ state | direction: :S}
-      :E -> %Rover{ state | direction: :E}
-      :W -> %Rover{ state | direction: :W}
-    end
+    new_state =
+      case state.direction do
+        :N -> %Rover{state | direction: :W}
+        :S -> %Rover{state | direction: :E}
+        :E -> %Rover{state | direction: :S}
+        :W -> %Rover{state | direction: :N}
+      end
+
+    {:no_reply, new_state}
+  end
+
 
     {:no_reply, new_state}
   end

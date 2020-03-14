@@ -5,23 +5,23 @@ defmodule RoverTest do
     {:ok, _} = Rover.start_link({9, 9, :N, "rover0"})
     {:ok, state} = Rover.get_state("rover0")
 
-    assert state == {9, 9, :N, 0}
+    assert state == {9, 9, :N}
   end
 
   test "handle_cast :go_forward should return updated state" do
     {:no_reply, state} = Rover.handle_cast(:go_forward, %Rover{x: 1, y: 3, direction: :N})
 
     assert state.x == 1
-    assert state.y == 3
-    assert direction == :N
+    assert state.y == 4
+    assert state.direction == :N
   end
 
   test "handle_cast :go_backward should return updated state" do
     {:no_reply, state} = Rover.handle_cast(:go_backward, %Rover{x: 1, y: 3, direction: :N})
 
     assert state.x == 1
-    assert state.y == 3
-    assert direction == :N
+    assert state.y == 2
+    assert state.direction == :N
   end
 
   test "handle_cast :rotate_left should return updated state" do
@@ -29,6 +29,8 @@ defmodule RoverTest do
 
     assert state.x == 1
     assert state.y == 3
-    assert direction == :W
+    assert state.direction == :W
+  end
+
   end
 end
