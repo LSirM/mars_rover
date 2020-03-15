@@ -11,6 +11,17 @@ defmodule Rover do
   end
 
   def init({x, y, d, name}) do
+    WorldMap.update_rover(name, x, y)
+
+    Rover.Web.WsServer.send_message_to_client(name, %{
+      name: name,
+      op: "born",
+      x: x,
+      y: y,
+      direction: d,
+      score: 0
+    })
+
     {:ok, %Rover{x: x, y: y, direction: d, name: name}}
   end
 
@@ -47,6 +58,7 @@ defmodule Rover do
         :W -> %Rover{state | x: rem(state.x - 1, @world_width), y: state.y}
       end
 
+    WorldMap.update_rover(state.name, state.x, state.y)
     {:no_reply, new_state}
   end
 
@@ -58,6 +70,8 @@ defmodule Rover do
         :E -> %Rover{state | x: rem(state.x + 1, @world_width), y: state.y}
         :W -> %Rover{state | x: rem(state.x - 1, @world_width), y: state.y}
       end
+
+    WorldMap.update_rover(state.name, state.x, state.y)
 
     {:no_reply, new_state}
   end
