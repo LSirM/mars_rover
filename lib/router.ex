@@ -1,7 +1,7 @@
 defmodule Rover.Web.Router do
   use Plug.Router
 
-  plug(Plug.Parsers, parsers: [:json], json_decoder: Poison)  
+  plug(Plug.Parsers, parsers: [:json], json_decoder: Poison)
   plug(:match)
   plug(:dispatch)
 
@@ -12,9 +12,14 @@ defmodule Rover.Web.Router do
     d = String.to_existing_atom(conn.body_params["d"])
 
     case RoverSupervisor.create_rover(rover_name, x, y, d) do
-      {:ok, _} -> send_resp(conn, 200, encode(%{message: "created rover #{rover_name}"}))
-      {:error, {:already_started, _}} -> send_resp(conn, 400, encode(%{message: "rover already exists"}))
-      _ -> send_resp(conn, 500, encode(%{message: "generic error"}))
+      {:ok, _} ->
+        send_resp(conn, 200, encode(%{message: "created rover #{rover_name}"}))
+
+      {:error, {:already_started, _}} ->
+        send_resp(conn, 400, encode(%{message: "rover already exists"}))
+
+      _ ->
+        send_resp(conn, 500, encode(%{message: "generic error"}))
     end
   end
 
